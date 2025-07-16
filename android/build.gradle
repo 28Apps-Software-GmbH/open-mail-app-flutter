@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.3.2")
+        classpath("com.android.tools.build:gradle:8.5.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
@@ -63,8 +63,10 @@ android {
             }
         }
     }
+    dependencies {
+        implementation 'com.google.code.gson:gson:2.12.1'
+        implementation 'androidx.annotation:annotation-jvm:1.9.1'
+    }
 }
 
-dependencies {
-   implementation 'com.google.code.gson:gson:2.12.1'
-}
+

@@ -8,10 +8,10 @@ environment:
   flutter: ">=3.27.0"
 
 dependencies:
-  platform: ^3.1.6
-  url_launcher: ^6.3.2
   flutter:
     sdk: flutter
+  platform: ^3.1.6
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

@@ -6,18 +6,20 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Open Mail App Example"),
+        title: Text('Open Mail App Example'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             ElevatedButton(
-              child: Text("Open Mail App"),
+              child: Text('Open Mail App'),
               onPressed: () async {
                 // Android: Will open mail app or show native picker.
                 // iOS: Will open mail app if single mail app found.
@@ -26,14 +28,16 @@ class MyApp extends StatelessWidget {
                 );
 
                 // If no mail apps found, show error
-                if (!result.didOpen && !result.canOpen) {
+                if (!result.didOpen && !result.canOpen && context.mounted) {
                   showNoMailAppsDialog(context);
 
                   // iOS: if multiple mail apps found, show dialog to select.
                   // There is no native intent/default app system in iOS so
                   // you have to do it yourself.
-                } else if (!result.didOpen && result.canOpen) {
-                  showDialog(
+                } else if (!result.didOpen &&
+                    result.canOpen &&
+                    context.mounted) {
+                  await showDialog(
                     context: context,
                     builder: (_) {
                       return MailAppPickerDialog(
@@ -61,10 +65,12 @@ class MyApp extends StatelessWidget {
                     await OpenMailApp.composeNewEmailInMailApp(
                         nativePickerTitle: 'Select email app to compose',
                         emailContent: email);
-                if (!result.didOpen && !result.canOpen) {
+                if (!result.didOpen && !result.canOpen && context.mounted) {
                   showNoMailAppsDialog(context);
-                } else if (!result.didOpen && result.canOpen) {
-                  showDialog(
+                } else if (!result.didOpen &&
+                    result.canOpen &&
+                    context.mounted) {
+                  await showDialog(
                     context: context,
                     builder: (_) => MailAppPickerDialog(
                       mailApps: result.options,
@@ -75,30 +81,32 @@ class MyApp extends StatelessWidget {
               },
             ),
             ElevatedButton(
-              child: Text("Get Mail Apps"),
+              child: Text('Get Mail Apps'),
               onPressed: () async {
                 var apps = await OpenMailApp.getMailApps();
 
-                if (apps.isEmpty) {
+                if (apps.isEmpty && context.mounted) {
                   showNoMailAppsDialog(context);
                 } else {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return MailAppPickerDialog(
-                        mailApps: apps,
-                        emailContent: EmailContent(
-                          to: [
-                            'user@domain.com',
-                          ],
-                          subject: 'Hello!',
-                          body: 'How are you doing?',
-                          cc: ['user2@domain.com', 'user3@domain.com'],
-                          bcc: ['boss@domain.com'],
-                        ),
-                      );
-                    },
-                  );
+                  if (context.mounted) {
+                    await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return MailAppPickerDialog(
+                          mailApps: apps,
+                          emailContent: EmailContent(
+                            to: [
+                              'user@domain.com',
+                            ],
+                            subject: 'Hello!',
+                            body: 'How are you doing?',
+                            cc: ['user2@domain.com', 'user3@domain.com'],
+                            bcc: ['boss@domain.com'],
+                          ),
+                        );
+                      },
+                    );
+                  }
                 }
               },
             ),
@@ -113,11 +121,11 @@ class MyApp extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Open Mail App"),
-          content: Text("No mail apps installed"),
+          title: Text('Open Mail App'),
+          content: Text('No mail apps installed'),
           actions: <Widget>[
             TextButton(
-              child: Text("OK"),
+              child: Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
               },
